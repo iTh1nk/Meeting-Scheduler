@@ -23,6 +23,7 @@ export default function NavMenu() {
       onClick={(e) => handleClick(e)}
       selectedKeys={current}
       mode="horizontal"
+      theme="light"
       id="navMenu"
     >
       <Menu.Item key="header">
@@ -41,6 +42,9 @@ export default function NavMenu() {
           <Menu.Item key="setting:4">Option 4</Menu.Item>
         </Menu.ItemGroup>
       </SubMenu>
+      <Menu.Item key="logout">
+        <span className="logout">Logout</span>
+      </Menu.Item>
     </Menu>
   );
 }

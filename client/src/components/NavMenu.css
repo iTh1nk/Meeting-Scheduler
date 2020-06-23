@@ -7,3 +7,7 @@
   height: 2.5em;
   margin-right: .5em;
 }
+
+.logout {
+  color: red;
+}
