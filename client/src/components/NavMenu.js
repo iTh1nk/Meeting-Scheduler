@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Menu } from "antd";
 import {
   MailOutlined,
@@ -7,11 +7,11 @@ import {
   ScheduleOutlined,
 } from "@ant-design/icons";
 import "./NavMenu.css";
+import { AssignContext } from "../AssignContext";
 
 export default function NavMenu() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
   const [current, setCurrent] = useState("mail");
-
-  const { SubMenu } = Menu;
 
   const handleClick = (e) => {
     console.log("click ", e);
@@ -32,18 +32,30 @@ export default function NavMenu() {
           Meeting Scheduler
         </a>
       </Menu.Item>
-      <SubMenu title="Admin">
-        <Menu.ItemGroup title="Admin Group">
-          <Menu.Item key="setting:1">Option 1</Menu.Item>
-          <Menu.Item key="setting:2">Option 2</Menu.Item>
-        </Menu.ItemGroup>
-        <Menu.ItemGroup title="User Group">
-          <Menu.Item key="setting:3">Option 3</Menu.Item>
-          <Menu.Item key="setting:4">Option 4</Menu.Item>
-        </Menu.ItemGroup>
-      </SubMenu>
-      <Menu.Item key="logout">
-        <span className="logout">Logout</span>
+      <Menu.Item key="admin">
+        <a href="/admin" className="hrefColor">
+          Admin
+        </a>
+      </Menu.Item>
+      <Menu.Item
+        key="log"
+        onClick={(e) => {
+          setIsAuthenticated(false);
+          window.location.replace("/");
+          window.localStorage.removeItem("auth");
+        }}
+      >
+        {isAuthenticated ? (
+          <span className="logout">Logout</span>
+        ) : (
+          <span>
+            {
+              <a href="/admin" className="hrefColor">
+                Login
+              </a>
+            }
+          </span>
+        )}
       </Menu.Item>
     </Menu>
   );
