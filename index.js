@@ -5,17 +5,21 @@ const mongoose = require("mongoose");
 const path = require("path");
 const logger = require("morgan");
 const http = require("http").createServer(app);
+const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http);
+
+const dotenv = require("dotenv");
+dotenv.config();
 
 const db = require("./server/models");
 
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: "http://localhost:3000",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  optionsSuccessStatus: 200
-}
+  optionsSuccessStatus: 200,
+};
 
 app.use(logger("dev"));
 
@@ -28,6 +32,17 @@ if (process.env.NODE_ENV === "production") {
 
 app.use("/api/auth", cors(corsOptions), (req, res) => {
   res.json({ message: "noGoal" });
+});
+
+app.use("/api/jwt", (req, res) => {
+  let token = jwt.sign(
+    { user: "Mac" },
+    process.env.SECRET_KEY,
+    {expiresIn: "2h"},
+    (err, token) => {
+      res.json({ token });
+    }
+  );
 });
 
 app.use((req, res) => {
