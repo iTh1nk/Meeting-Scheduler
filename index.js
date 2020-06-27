@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 const logger = require("morgan");
+const colors = require("colors");
 const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http);
@@ -30,7 +31,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-app.use("/api/auth", cors(corsOptions), (req, res) => {
+app.use("/api/auth", cors(corsOptions), authorizationJWT, (req, res) => {
   res.json({ message: "noGoal" });
 });
 
@@ -38,12 +39,23 @@ app.use("/api/jwt", (req, res) => {
   let token = jwt.sign(
     { user: "Mac" },
     process.env.SECRET_KEY,
-    {expiresIn: "2h"},
+    { expiresIn: "2h" },
     (err, token) => {
       res.json({ token });
     }
   );
 });
+
+function authorizationJWT(req, res, next) {
+  let bearerToken = req.headers["authorization"];
+  if (typeof bearerToken !== undefined) {
+    let token = bearerToken.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+      if (err) res.sendStatus(403);
+      else next();
+    });
+  } else res.sendStatus(403);
+}
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
