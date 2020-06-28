@@ -29,39 +29,22 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-}
-
-app.use("/api/auth", cors(corsOptions), authorizationJWT, (req, res) => {
-  res.json({ message: "noGoal" });
-});
-
-app.use("/api/jwt", (req, res) => {
+app.post("/api/login", (req, res) => {
   let token = jwt.sign(
-    { user: "Mac" },
+    { user: "Mac", expiresIn: "60 * 60" },
     process.env.SECRET_KEY,
-    { expiresIn: "2h" },
     (err, token) => {
       res.json({ token });
     }
   );
 });
 
-function authorizationJWT(req, res, next) {
-  let bearerToken = req.headers["authorization"];
-  if (typeof bearerToken !== undefined) {
-    let token = bearerToken.split(" ")[1];
-    jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
-      if (err) res.sendStatus(403);
-      else next();
-    });
-  } else res.sendStatus(403);
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
 }
 
-app.use("/api/user", userRoutes);
+app.use("/api/user", authorizationJWT, userRoutes);
 app.use("/api/meeting", meetingRoutes);
-// require("./server/routes/userRoutes")
 
 // app.use((req, res) => {
 //   res.sendFile(path.join(__dirname, "./client/build/index.html"));
@@ -80,3 +63,15 @@ mongoose.connect(
 http.listen(PORT, () => {
   console.log(`🚀Server is running on PORT: ${PORT}`);
 });
+
+//User Authorization
+function authorizationJWT(req, res, next) {
+  let bearerToken = req.headers["authorization"];
+  if (!(bearerToken === undefined)) {
+    let token = bearerToken.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+      if (err) res.sendStatus(403);
+      else next();
+    });
+  } else res.sendStatus(403);
+}
