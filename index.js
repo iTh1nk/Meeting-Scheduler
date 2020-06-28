@@ -13,6 +13,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const db = require("./server/models");
+const userRoutes = require("./server/routes/userRoutes");
+const meetingRoutes = require("./server/routes/meetingRoutes");
 
 const PORT = process.env.PORT || 3001;
 
@@ -57,9 +59,13 @@ function authorizationJWT(req, res, next) {
   } else res.sendStatus(403);
 }
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
-});
+app.use("/api/user", userRoutes);
+app.use("/api/meeting", meetingRoutes);
+// require("./server/routes/userRoutes")
+
+// app.use((req, res) => {
+//   res.sendFile(path.join(__dirname, "./client/build/index.html"));
+// });
 
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/meetingscheduler",
