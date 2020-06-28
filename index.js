@@ -8,6 +8,8 @@ const colors = require("colors");
 const http = require("http").createServer(app);
 const jwt = require("jsonwebtoken");
 const io = require("socket.io")(http);
+const bcrypt = require("bcrypt");
+const _ = require("lodash");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -30,13 +32,45 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post("/api/login", (req, res) => {
-  let token = jwt.sign(
+  jwt.sign(
     { user: "Mac", expiresIn: "60 * 60" },
     process.env.SECRET_KEY,
     (err, token) => {
-      res.json({ token });
+      return res.json({ token });
     }
   );
+});
+
+//User Signup
+app.post("/api/signup", (req, res) => {
+  let data = _.pick(req.body, ["username", "password", "email", "group"]);
+  db.User.findOne({ username: data.username })
+    .then((dbUser) => {
+      if (dbUser) {
+        return res.status(409).json({ message: "Username exists!" });
+      } else {
+        bcrypt.hash(data.password, 10, (err, hash) => {
+          if (err) {
+            return res.status(500).json({
+              error: err,
+            });
+          } else {
+            data.password = hash;
+            db.User.create(data)
+              .then((dbNewUser) => {
+                console.log(colors.green("dbNewUser"));
+                return res.status(201).json({ message: "User added!" });
+              })
+              .catch((err) => {
+                if (err) return res.json(err);
+              });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      if (err) return res.json({ error: err });
+    });
 });
 
 if (process.env.NODE_ENV === "production") {
@@ -44,7 +78,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.use("/api/user", authorizationJWT, userRoutes);
-app.use("/api/meeting", meetingRoutes);
+app.use("/api/meeting", authorizationJWT, meetingRoutes);
 
 // app.use((req, res) => {
 //   res.sendFile(path.join(__dirname, "./client/build/index.html"));
@@ -60,10 +94,6 @@ mongoose.connect(
   }
 );
 
-http.listen(PORT, () => {
-  console.log(`🚀Server is running on PORT: ${PORT}`);
-});
-
 //User Authorization
 function authorizationJWT(req, res, next) {
   let bearerToken = req.headers["authorization"];
@@ -75,3 +105,7 @@ function authorizationJWT(req, res, next) {
     });
   } else res.sendStatus(403);
 }
+
+http.listen(PORT, () => {
+  console.log(`🚀Server is running on PORT: ${PORT}`);
+});

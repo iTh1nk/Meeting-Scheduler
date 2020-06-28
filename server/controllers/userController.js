@@ -5,7 +5,16 @@ const jwt = require("jsonwebtoken")
 const db = require("../models");
 
 module.exports = {
-  getTest: (req, res) => {
-    res.json({message: "hello user"})
-  }
+  createUser: (req, res) => {
+    res.json({message: "create"})
+  },
+  readUser: (req, res) => {
+    res.json({message: "read"})
+  },
+  updateUser: (req, res) => {
+    res.json({message: "update"})
+  },
+  deleteUser: (req, res) => {
+    res.json({message: "delete"})
+  },
 }
