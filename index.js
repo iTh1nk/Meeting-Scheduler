@@ -126,11 +126,11 @@ function authorizationJWT(req, res, next) {
     let token = bearerToken.split(" ")[1];
     jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
       if (err) return res.sendStatus(403);
-      else res.json(data);
+      else next();
     });
   } else return res.sendStatus(403);
 }
 
 http.listen(PORT, () => {
-  console.log(`🚀Server is running on PORT: ${PORT}`);
+  console.log(`🚀ON PORT: ${PORT}`);
 });
