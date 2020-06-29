@@ -45,8 +45,9 @@ app.post("/api/login", (req, res) => {
             .json({ message: "Username or password doesn't match!" });
         } else {
           jwt.sign(
-            { user: "Mac", expiresIn: "60 * 60" },
+            { user: data.username },
             process.env.SECRET_KEY,
+            { expiresIn: process.env.SECRET_EXP },
             (err, token) => {
               return res.status(200).json({ token });
             }
@@ -74,8 +75,16 @@ app.post("/api/signup", (req, res) => {
             data.password = hash;
             db.User.create(data)
               .then((dbNewUser) => {
-                console.log(colors.green("dbNewUser"));
-                return res.status(201).json({ message: "User added!" });
+                jwt.sign(
+                  { user: data.username },
+                  process.env.SECRET_KEY,
+                  { expiresIn: process.env.SECRET_EXP },
+                  (err, token) => {
+                    return res
+                      .status(201)
+                      .json({ message: "User added!", token });
+                  }
+                );
               })
               .catch((err) => {
                 if (err) return res.status(500).json({ error: err });
@@ -116,10 +125,10 @@ function authorizationJWT(req, res, next) {
   if (!(bearerToken === undefined)) {
     let token = bearerToken.split(" ")[1];
     jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
-      if (err) res.sendStatus(403);
-      else next();
+      if (err) return res.sendStatus(403);
+      else res.json(data);
     });
-  } else res.sendStatus(403);
+  } else return res.sendStatus(403);
 }
 
 http.listen(PORT, () => {
