@@ -32,13 +32,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post("/api/login", (req, res) => {
-  jwt.sign(
-    { user: "Mac", expiresIn: "60 * 60" },
-    process.env.SECRET_KEY,
-    (err, token) => {
-      return res.json({ token });
+  let data = _.pick(req.body, ["username", "password"]);
+  db.User.findOne({ username: data.username }).then((dbUser) => {
+    if (!dbUser) return res.status(404).json({ message: "No username found!" });
+    else {
+      bcrypt.compare(data.password, dbUser.password, function (err, result) {
+        if (err) {
+          return res.status(500).json({ error: err });
+        } else if (!result) {
+          return res
+            .status(403)
+            .json({ message: "Username or password doesn't match!" });
+        } else {
+          jwt.sign(
+            { user: "Mac", expiresIn: "60 * 60" },
+            process.env.SECRET_KEY,
+            (err, token) => {
+              return res.status(200).json({ token });
+            }
+          );
+        }
+      });
     }
-  );
+  });
 });
 
 //User Signup
@@ -62,7 +78,7 @@ app.post("/api/signup", (req, res) => {
                 return res.status(201).json({ message: "User added!" });
               })
               .catch((err) => {
-                if (err) return res.json(err);
+                if (err) return res.status(500).json({ error: err });
               });
           }
         });
