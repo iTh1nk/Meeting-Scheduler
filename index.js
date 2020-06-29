@@ -41,7 +41,7 @@ app.post("/api/login", (req, res) => {
           return res.status(500).json({ error: err });
         } else if (!result) {
           return res
-            .status(403)
+            .status(401)
             .json({ message: "Username or password doesn't match!" });
         } else {
           jwt.sign(
