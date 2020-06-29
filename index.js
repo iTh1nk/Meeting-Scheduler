@@ -102,6 +102,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
+app.use("/api/auth", cors(corsOptions), (req, res) => {
+  return res.json({message: "ok"})
+})
+
 app.use("/api/user", authorizationJWT, userRoutes);
 app.use("/api/meeting", authorizationJWT, meetingRoutes);
 

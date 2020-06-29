@@ -12,14 +12,6 @@ export default function Login() {
 
   const handleOk = (e) => {
     e.preventDefault();
-    setConfirmLoading(true);
-
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-      setIsAuthenticated(true);
-      window.localStorage.setItem("auth", "LoggedIn");
-    }, 2000);
   };
 
   const handleCancel = (e) => {
@@ -34,15 +26,21 @@ export default function Login() {
         initialValues={{ username: "", password: "" }}
         validationSchema={Yup.object({
           username: Yup.string(),
-          password: Yup.string()
-            .matches(
-              /[0-1][0-9]\-[0-3][0-9]$/g,
-              "Date format is invalid! (i.e. 01-23)"
-            ),
+          password: Yup.string().matches(
+            /[0-1][0-9]\-[0-3][0-9]$/g,
+            "Date format is invalid! (i.e. 01-23)"
+          ),
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          alert("Submitted!");
+          setConfirmLoading(true);
+
+          setTimeout(() => {
+            setVisible(false);
+            setConfirmLoading(false);
+            setIsAuthenticated(true);
+            window.localStorage.setItem("auth", "LoggedIn");
+          }, 2000);
           setTimeout(() => {
             resetForm();
             setSubmitting(false);
