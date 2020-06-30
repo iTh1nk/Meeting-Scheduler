@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { AssignContext } from "../AssignContext";
 import { HomeOutlined } from "@ant-design/icons";
-import "./Login.css";
+import "./Signup.css";
 import { Modal, Button, Form, Input, Alert } from "antd";
 import Axios from "axios";
 
-export default function Login() {
+export default function Signup() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
   const [visible, setVisible] = useState(true);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -23,14 +23,14 @@ export default function Login() {
     let data = {
       username: values.username,
       password: values.password,
+      email: values.email,
     };
     setConfirmLoading(true);
-    Axios.post("http://localhost:3001/api/login", data)
+    Axios.post("http://localhost:3001/api/signup", data)
       .then((resp) => {
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);
-          setErrorMessage("");
-          window.localStorage.setItem("auth", "Bearer " + resp.data.token);
+          window.localStorage.setItem("auth", "LoggedIn");
           setConfirmLoading(false);
           setVisible(false);
         } else {
@@ -39,16 +39,11 @@ export default function Login() {
         }
       })
       .catch((err) => {
-        if (err) {
-          console.log(err.response);
-          setConfirmLoading(false);
-          setErrorMessage(err.response.data.message);
-        }
+        if (err) console.log(err);
       });
   };
   const onReset = () => {
     form.resetFields();
-    setErrorMessage("");
   };
   const layout = {
     labelCol: {
@@ -62,7 +57,7 @@ export default function Login() {
   return (
     <div>
       <Modal
-        title="Login"
+        title="Signup"
         visible={visible}
         onCancel={(e) => handleCancel(e)}
         footer={null}
@@ -78,12 +73,20 @@ export default function Login() {
               },
             ]}
           >
-            <Input
-              onChange={(e) => {
-                e.preventDefault();
-                setErrorMessage("");
-              }}
-            />
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                message: "Valid email is required!",
+                pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+              },
+            ]}
+          >
+            <Input />
           </Form.Item>
           <Form.Item
             name="password"
@@ -95,31 +98,22 @@ export default function Login() {
               },
             ]}
           >
-            <Input.Password
-              onChange={(e) => {
-                e.preventDefault();
-                setErrorMessage("");
-              }}
-            />
+            <Input.Password />
           </Form.Item>
-          <Form.Item id="login-btn-group">
+          <Form.Item id="signup-btn-group">
             <Button
               type="primary"
               htmlType="submit"
-              id="login-btn-submit"
+              id="signup-btn-submit"
               loading={confirmLoading}
             >
               Submit
             </Button>{" "}
-            <Button htmlType="button" onClick={onReset} id="login-btn-reset">
+            <Button htmlType="button" onClick={onReset} id="signup-btn-reset">
               Reset
             </Button>
+            <span className="errorMessage">{errorMessage}</span>
           </Form.Item>
-          {errorMessage ? (
-            <Form.Item>
-              <span className="errorMessage">{errorMessage}</span>
-            </Form.Item>
-          ) : null}
         </Form>
       </Modal>
     </div>

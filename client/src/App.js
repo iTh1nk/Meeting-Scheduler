@@ -12,9 +12,11 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (window.localStorage.getItem("auth") === "LoggedIn")
-      setIsAuthenticated(true);
-    Axios.get("http://localhost:3001/api/auth")
+    Axios.get("http://localhost:3001/api/auth", {
+      headers: {
+        authorization: localStorage.getItem("auth"),
+      },
+    })
       .then((resp) => {
         if (resp.data.message === "ok") setIsAuthenticated(true);
       })

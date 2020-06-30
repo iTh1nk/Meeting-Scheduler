@@ -22,20 +22,23 @@ const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
   origin: "http://localhost:3000",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  optionsSuccessStatus: 200,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTION",
+  // optionsSuccessStatus: 200,
 };
+app.use(cors(corsOptions));
 
 app.use(logger("dev"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//User Login
 app.post("/api/login", (req, res) => {
   let data = _.pick(req.body, ["username", "password"]);
   db.User.findOne({ username: data.username }).then((dbUser) => {
-    if (!dbUser) return res.status(404).json({ message: "No username found!" });
-    else {
+    if (!dbUser) {
+      return res.status(401).json({ message: "No username found!" });
+    } else {
       bcrypt.compare(data.password, dbUser.password, function (err, result) {
         if (err) {
           return res.status(500).json({ error: err });
@@ -49,7 +52,7 @@ app.post("/api/login", (req, res) => {
             process.env.SECRET_KEY,
             { expiresIn: process.env.SECRET_EXP },
             (err, token) => {
-              return res.status(200).json({ token });
+              return res.status(200).json({ message: "ok", token });
             }
           );
         }
@@ -102,9 +105,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-app.use("/api/auth", cors(corsOptions), (req, res) => {
-  return res.json({message: "ok"})
-})
+app.get("/api/auth", authorizationJWT, (req, res) => {
+  return res.json({ message: "ok" });
+});
 
 app.use("/api/user", authorizationJWT, userRoutes);
 app.use("/api/meeting", authorizationJWT, meetingRoutes);
