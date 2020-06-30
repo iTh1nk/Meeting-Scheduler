@@ -4,6 +4,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import "./Signup.css";
 import { Modal, Button, Form, Input, Alert } from "antd";
 import Axios from "axios";
+import { values } from "lodash";
 
 export default function Signup() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
@@ -30,7 +31,7 @@ export default function Signup() {
       .then((resp) => {
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);
-          window.localStorage.setItem("auth", "LoggedIn");
+          window.localStorage.setItem("auth", "Bearer " + resp.data.token);
           setConfirmLoading(false);
           setVisible(false);
         } else {
@@ -39,7 +40,10 @@ export default function Signup() {
         }
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          setErrorMessage(err.response.data.message);
+        }
       });
   };
   const onReset = () => {
@@ -66,6 +70,7 @@ export default function Signup() {
           <Form.Item
             name="username"
             label="Username"
+            hasFeedback
             rules={[
               {
                 required: true,
@@ -73,11 +78,17 @@ export default function Signup() {
               },
             ]}
           >
-            <Input />
+            <Input
+              onChange={(e) => {
+                e.preventDefault();
+                setErrorMessage("");
+              }}
+            />
           </Form.Item>
           <Form.Item
             name="email"
             label="Email"
+            hasFeedback
             rules={[
               {
                 required: true,
@@ -86,11 +97,17 @@ export default function Signup() {
               },
             ]}
           >
-            <Input />
+            <Input
+              onChange={(e) => {
+                e.preventDefault();
+                setErrorMessage("");
+              }}
+            />
           </Form.Item>
           <Form.Item
             name="password"
             label="Password"
+            hasFeedback
             rules={[
               {
                 required: true,
@@ -98,7 +115,41 @@ export default function Signup() {
               },
             ]}
           >
-            <Input.Password />
+            <Input.Password
+              onChange={(e) => {
+                e.preventDefault();
+                setErrorMessage("");
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            name="password2"
+            label="Confirm"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "The two passwords that you entered do not match!"
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              onChange={(e) => {
+                e.preventDefault();
+                setErrorMessage("");
+              }}
+            />
           </Form.Item>
           <Form.Item id="signup-btn-group">
             <Button
@@ -112,8 +163,12 @@ export default function Signup() {
             <Button htmlType="button" onClick={onReset} id="signup-btn-reset">
               Reset
             </Button>
-            <span className="errorMessage">{errorMessage}</span>
           </Form.Item>
+          {errorMessage ? (
+            <Form.Item>
+              <span className="errorMessage">{errorMessage}</span>
+            </Form.Item>
+          ) : null}
         </Form>
       </Modal>
     </div>

@@ -85,7 +85,7 @@ app.post("/api/signup", (req, res) => {
                   (err, token) => {
                     return res
                       .status(201)
-                      .json({ message: "User added!", token });
+                      .json({ message: "ok", token });
                   }
                 );
               })

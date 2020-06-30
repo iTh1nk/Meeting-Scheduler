@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavMenu from "./components/NavMenu";
 import HomeBody from "./components/HomeBody";
 import Admin from "./components/Admin";
+import Signup from "./components/Signup";
 import NoMatch from "./components/NoMatch";
 
 import { AssignContext } from "./AssignContext";
@@ -33,6 +34,11 @@ function App() {
           <Switch>
             <Route exact path="/" render={(props) => <HomeBody />} />
             <Route exact path="/admin" render={(props) => <Admin />} />
+            <Route
+              exact
+              path="/signup"
+              render={(props) => (isAuthenticated ? <HomeBody /> : <Signup />)}
+            />
             <Route component={NoMatch} />
           </Switch>
         </Router>
