@@ -32,31 +32,31 @@ export default function NavMenu() {
           Meeting Scheduler
         </a>
       </Menu.Item>
-      <Menu.Item key="admin">
-        <a href="/admin" className="hrefColor">
-          Admin
-        </a>
-      </Menu.Item>
-      <Menu.Item
-        key="log"
-        onClick={(e) => {
-          setIsAuthenticated(false);
-          window.location.replace("/");
-          window.localStorage.removeItem("auth");
-        }}
-      >
-        {isAuthenticated ? (
+      {isAuthenticated ? (
+        <Menu.Item key="admin">
+          <a href="/admin" className="hrefColor">
+            Admin
+          </a>
+        </Menu.Item>
+      ) : (
+        <Menu.Item key="login">
+          <a href="/admin" className="hrefColor">
+            Login
+          </a>
+        </Menu.Item>
+      )}
+      {isAuthenticated ? (
+        <Menu.Item
+          key="logout"
+          onClick={(e) => {
+            setIsAuthenticated(false);
+            window.localStorage.removeItem("auth");
+            window.location.replace("/");
+          }}
+        >
           <span className="logout">Logout</span>
-        ) : (
-          <span>
-            {
-              <a href="/admin" className="hrefColor">
-                Login
-              </a>
-            }
-          </span>
-        )}
-      </Menu.Item>
+        </Menu.Item>
+      ) : null}
     </Menu>
   );
 }
