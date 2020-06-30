@@ -11,6 +11,16 @@ import Axios from "axios";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginUser, setLoginUser] = useState("");
+
+  const parseJwt = (token) => {
+    if (!token) {
+      return;
+    }
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace("-", "+").replace("_", "/");
+    return JSON.parse(window.atob(base64));
+  };
 
   useEffect(() => {
     Axios.get("http://localhost:3001/api/auth", {
@@ -19,7 +29,10 @@ function App() {
       },
     })
       .then((resp) => {
-        if (resp.data.message === "ok") setIsAuthenticated(true);
+        if (resp.data.message === "ok") {
+          setIsAuthenticated(true);
+          setLoginUser(parseJwt(localStorage.getItem("auth").split(" ")[1]).user);
+        }
       })
       .catch((err) => {
         if (err) console.log(err.response);
@@ -28,7 +41,7 @@ function App() {
 
   return (
     <div>
-      <AssignContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      <AssignContext.Provider value={{ isAuthenticated, setIsAuthenticated, loginUser }}>
         <NavMenu />
         <Router>
           <Switch>

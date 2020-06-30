@@ -10,7 +10,9 @@ import "./NavMenu.css";
 import { AssignContext } from "../AssignContext";
 
 export default function NavMenu() {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
+  const { isAuthenticated, setIsAuthenticated, loginUser } = useContext(
+    AssignContext
+  );
   const [current, setCurrent] = useState("mail");
 
   const handleClick = (e) => {
@@ -54,7 +56,8 @@ export default function NavMenu() {
             window.location.replace("/");
           }}
         >
-          <span className="logout">Logout</span>
+          <span className="logout">Logout </span>(
+          <span style={{ color: "green" }}>{loginUser}</span>)
         </Menu.Item>
       ) : null}
     </Menu>

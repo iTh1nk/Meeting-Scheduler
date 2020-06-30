@@ -115,6 +115,7 @@ export default function Login() {
           <Form.Item id="login-btn-group">
             <Button
               type="primary"
+              ghost
               htmlType="submit"
               id="login-btn-submit"
               loading={confirmLoading}
