@@ -74,8 +74,12 @@ export default function Signup() {
             rules={[
               {
                 required: true,
-                message: "Valid username is required!",
+                message: "Username field is required!",
               },
+              {
+                min: 3,
+                message: "Minimum 3 characters required!"
+              }
             ]}
           >
             <Input
@@ -92,9 +96,12 @@ export default function Signup() {
             rules={[
               {
                 required: true,
-                message: "Valid email is required!",
-                pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                message: "Email field is required!",
               },
+              {
+                pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                message: "Email is not valid!"
+              }
             ]}
           >
             <Input
@@ -111,7 +118,11 @@ export default function Signup() {
             rules={[
               {
                 required: true,
-                message: "Valid password is required!",
+                message: "Password field is required!",
+              },
+              {
+                min: 3,
+                message: "Minimum 3 characters required!"
               },
             ]}
           >
@@ -138,7 +149,7 @@ export default function Signup() {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    "The two passwords that you entered do not match!"
+                    "Two passwords don't match!"
                   );
                 },
               }),

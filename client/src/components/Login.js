@@ -71,11 +71,16 @@ export default function Login() {
           <Form.Item
             name="username"
             label="Username"
+            hasFeedback
             rules={[
               {
                 required: true,
-                message: "Valid username is required!",
+                message: "Username field is required!",
               },
+              {
+                min: 3,
+                message: "Minimum 3 characters required!"
+              }
             ]}
           >
             <Input
@@ -88,10 +93,15 @@ export default function Login() {
           <Form.Item
             name="password"
             label="Password"
+            hasFeedback
             rules={[
               {
                 required: true,
-                message: "Valid password is required!",
+                message: "Password field is required!",
+              },
+              {
+                min: 3,
+                message: "Minimum 3 characters required!"
               },
             ]}
           >
