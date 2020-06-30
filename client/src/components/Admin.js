@@ -21,8 +21,6 @@ export default function Admin() {
     setCollapsed(!collapsed);
   };
 
-  if (!isAuthenticated) return <Login />;
-
   return (
     <div>
       <Layout>
@@ -41,17 +39,13 @@ export default function Admin() {
           </Menu>
         </Sider>
         <Layout className="site-layout">
-          {/* <Header className="site-layout-background" style={{ padding: 0 }}> */}
-          <span className="trigger" onClick={(e) => toggle(e)}>
-            {
-              collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
-              // {
-              //   className: "trigger",
-              //   onClick: (e) => toggle(e),
-              // }
-            }
+          <span
+            className="trigger"
+            onClick={(e) => toggle(e)}
+            style={{ margin: "1em" }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>
-          {/* </Header> */}
           <Content
             className="site-layout-background"
             style={{

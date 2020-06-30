@@ -8,8 +8,11 @@ import NoMatch from "./components/NoMatch";
 
 import { AssignContext } from "./AssignContext";
 import Axios from "axios";
+import Login from "./components/Login";
+import IsLoading from "./components/IsLoading";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginUser, setLoginUser] = useState("");
 
@@ -31,7 +34,10 @@ function App() {
       .then((resp) => {
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);
-          setLoginUser(parseJwt(localStorage.getItem("auth").split(" ")[1]).user);
+          setLoginUser(
+            parseJwt(localStorage.getItem("auth").split(" ")[1]).user
+          );
+          setIsLoading(false);
         }
       })
       .catch((err) => {
@@ -39,14 +45,28 @@ function App() {
       });
   }, [isAuthenticated]);
 
+  if (isLoading) {
+    return (
+      <div>
+        <IsLoading />
+      </div>
+    )
+  }
+
   return (
     <div>
-      <AssignContext.Provider value={{ isAuthenticated, setIsAuthenticated, loginUser }}>
+      <AssignContext.Provider
+        value={{ isAuthenticated, setIsAuthenticated, loginUser }}
+      >
         <NavMenu />
         <Router>
           <Switch>
             <Route exact path="/" render={(props) => <HomeBody />} />
-            <Route exact path="/admin" render={(props) => <Admin />} />
+            <Route
+              exact
+              path="/admin"
+              render={(props) => (isAuthenticated ? <Admin /> : <Login />)}
+            />
             <Route
               exact
               path="/signup"

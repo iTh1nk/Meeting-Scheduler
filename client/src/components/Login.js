@@ -121,7 +121,7 @@ export default function Login() {
               loading={confirmLoading}
             >
               Submit
-            </Button>{" "}
+            </Button>
             <Button htmlType="button" onClick={onReset} id="login-btn-reset">
               Reset
             </Button>

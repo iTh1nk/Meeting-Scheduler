@@ -1,0 +1,14 @@
+#loading-img-div {
+  width: 100%;
+  text-align: center;
+}
+
+#loading-img {
+  width: 15em;
+  height: 15em;
+}
+
+@media only screen and (max-width: 991px) {
+  #loading-img-div {}
+  #loading-img {}
+}
