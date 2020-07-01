@@ -5,11 +5,13 @@ import HomeBody from "./components/HomeBody";
 import Admin from "./components/Admin";
 import Signup from "./components/Signup";
 import NoMatch from "./components/NoMatch";
-
+import { Layout } from "antd";
 import { AssignContext } from "./AssignContext";
 import Axios from "axios";
 import Login from "./components/Login";
 import IsLoading from "./components/IsLoading";
+
+const { Footer } = Layout;
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +43,10 @@ function App() {
         }
       })
       .catch((err) => {
-        if (err) console.log(err.response);
+        if (err) {
+          console.log(err.response);
+          setIsLoading(false);
+        }
       });
   }, [isAuthenticated]);
 
@@ -50,7 +55,7 @@ function App() {
       <div>
         <IsLoading />
       </div>
-    )
+    );
   }
 
   return (
@@ -75,6 +80,8 @@ function App() {
             <Route component={NoMatch} />
           </Switch>
         </Router>
+        <br />
+        <Footer style={{ textAlign: "center" }}>Meeting Scheduler ©2020</Footer>
       </AssignContext.Provider>
     </div>
   );

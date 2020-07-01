@@ -1,25 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useReducer } from "react";
 import { Layout, Menu } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  UploadOutlined,
+  IdcardOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { AssignContext } from "../AssignContext";
-import Login from "./Login";
+import Overview from "./AdminOverview";
+import Settings from "./AdminSettings";
+import Users from "./AdminUsers";
 
 const { Header, Sider, Content } = Layout;
+
+function Welcome() {
+  return <div>Welcome to Admin Page!</div>;
+}
 
 export default function Admin() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
   const [collapsed, setCollapsed] = useState(true);
+  const [sideBar, dispatch] = useReducer(SidebarReducer, <Welcome />);
 
   const toggle = (e) => {
     e.preventDefault();
     setCollapsed(!collapsed);
   };
+
+  function SidebarReducer(state, action) {
+    switch (action.type) {
+      case "overview":
+        return <Overview />;
+      case "settings":
+        return <Settings />;
+      case "users":
+        return <Users />;
+    }
+  }
 
   return (
     <div>
@@ -27,14 +46,44 @@ export default function Admin() {
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" icon={<UserOutlined />}>
-              nav 1
+            <Menu.Item
+              key="2"
+              icon={
+                <UserOutlined
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch({ type: "overview" });
+                  }}
+                />
+              }
+            >
+              Overview
             </Menu.Item>
-            <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-              nav 2
+            <Menu.Item
+              key="3"
+              icon={
+                <SettingOutlined
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch({ type: "settings" });
+                  }}
+                />
+              }
+            >
+              Settings
             </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined />}>
-              nav 3
+            <Menu.Item
+              key="4"
+              icon={
+                <IdcardOutlined
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch({ type: "users" });
+                  }}
+                />
+              }
+            >
+              Users
             </Menu.Item>
           </Menu>
         </Sider>
@@ -54,7 +103,7 @@ export default function Admin() {
               minHeight: 280,
             }}
           >
-            Content
+            {sideBar}
           </Content>
         </Layout>
       </Layout>
