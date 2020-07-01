@@ -1,9 +1,21 @@
-import React from 'react';
+import React from "react";
 
 export default function Welcome() {
   return (
     <div>
-      Welcome to Admin Page!
+      <img
+        className="App-logo"
+        style={{
+          height: "2em",
+          width: "2em",
+          display: "inline",
+        }}
+        src="/circle.png"
+        alt="Logo"
+      />
+      <h1 style={{ marginLeft: "1em", display: "inline" }}>
+        Welcome!
+      </h1>
     </div>
-  )
+  );
 }
