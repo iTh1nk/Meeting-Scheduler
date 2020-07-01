@@ -210,15 +210,15 @@ export default function Users() {
               }}
             />
           </Form.Item>
-          <Form.Item style={{textAlign: "center"}}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={confirmLoading}
-            >
+          <Form.Item style={{ textAlign: "center" }}>
+            <Button type="primary" htmlType="submit" loading={confirmLoading}>
               Submit
             </Button>{" "}
-            <Button htmlType="button" style={{marginLeft: "2em"}} onClick={onReset}>
+            <Button
+              htmlType="button"
+              style={{ marginLeft: "2em" }}
+              onClick={onReset}
+            >
               Reset
             </Button>
           </Form.Item>
@@ -263,7 +263,9 @@ export default function Users() {
         <Select.Option value="deleteUser">Delete User</Select.Option>
         <Select.Option value="updateUser">Update User</Select.Option>
       </Select>
-      <Layout style={{ margin: "1.5em" }}>{content}</Layout>
+      <Layout style={{ margin: "1.5em" }}>
+        <span style={{ backgroundColor: "#fff" }}>{content}</span>
+      </Layout>
     </div>
   );
 }

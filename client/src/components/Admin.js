@@ -13,6 +13,7 @@ import Overview from "./AdminOverview";
 import Settings from "./AdminSettings";
 import Users from "./AdminUsers";
 import Welcome from "./AdminWelcome";
+import "./Admin.css";
 
 const { Header, Sider, Content } = Layout;
 
@@ -40,14 +41,14 @@ export default function Admin() {
   return (
     <div>
       <Layout>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider breakpoint="lg" collapsedWidth="0">
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item onClick={(e) => toggle(e)}>
+            {/* <Menu.Item onClick={(e) => toggle(e)}>
               <span style={{ margin: "0em" }}>
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </span>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item
               key="2"
               icon={<UserOutlined />}
@@ -77,7 +78,7 @@ export default function Admin() {
             </Menu.Item>
           </Menu>
         </Sider>
-        <Layout className="site-layout">
+        {/* <Layout className="site-layout">
           <Content
             className="site-layout-background"
             style={{
@@ -87,6 +88,17 @@ export default function Admin() {
           >
             {sideBar}
           </Content>
+        </Layout> */}
+        <Layout>
+          <Content style={{ margin: "24px 16px 0" }}>
+            <div
+              className="site-layout-background"
+              style={{ padding: 24, minHeight: 360 }}
+            >
+              {sideBar}
+            </div>
+          </Content>
+          <Layout.Footer></Layout.Footer>
         </Layout>
       </Layout>
     </div>
