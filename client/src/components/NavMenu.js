@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
-import { Menu } from "antd";
+import { Menu, Popconfirm } from "antd";
 import {
   MailOutlined,
   AppstoreOutlined,
   SettingOutlined,
   ScheduleOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
 import "./NavMenu.css";
 import { AssignContext } from "../AssignContext";
@@ -47,19 +48,22 @@ export default function NavMenu() {
           </a>
         </Menu.Item>
       )}
-      {isAuthenticated ? (
-        <Menu.Item
-          key="logout"
-          onClick={(e) => {
-            setIsAuthenticated(false);
-            window.localStorage.removeItem("auth");
-            window.location.replace("/");
-          }}
-        >
-          <span className="logout">Logout </span>(
-          <span style={{ color: "green" }}>{loginUser}</span>)
-        </Menu.Item>
-      ) : null}
+      <Menu.Item key="logout">
+        {isAuthenticated ? (
+          <Popconfirm
+            title="Are you sure？"
+            icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+            onConfirm={() => {
+              setIsAuthenticated(false);
+              window.localStorage.removeItem("auth");
+              window.location.replace("/");
+            }}
+          >
+            <span className="logout">Logout </span>
+            <span style={{ color: "green" }}>({loginUser})</span>
+          </Popconfirm>
+        ) : null}
+      </Menu.Item>
     </Menu>
   );
 }

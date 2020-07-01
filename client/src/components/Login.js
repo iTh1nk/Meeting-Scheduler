@@ -33,6 +33,7 @@ export default function Login() {
           window.localStorage.setItem("auth", "Bearer " + resp.data.token);
           setConfirmLoading(false);
           setVisible(false);
+          window.location.reload();
         } else {
           setConfirmLoading(false);
           setErrorMessage(resp.data.message);
@@ -79,8 +80,8 @@ export default function Login() {
               },
               {
                 min: 3,
-                message: "Minimum 3 characters required!"
-              }
+                message: "Minimum 3 characters required!",
+              },
             ]}
           >
             <Input
@@ -101,7 +102,7 @@ export default function Login() {
               },
               {
                 min: 3,
-                message: "Minimum 3 characters required!"
+                message: "Minimum 3 characters required!",
               },
             ]}
           >

@@ -19,10 +19,10 @@ const { Header, Sider, Content } = Layout;
 export default function Admin() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
   const [collapsed, setCollapsed] = useState(true);
-  const [sideBar, dispatch] = useReducer(SidebarReducer, <Welcome />);
+  const [sideBar, dispatch] = useReducer(SidebarReducer, <Users />);
 
   const toggle = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setCollapsed(!collapsed);
   };
 
@@ -43,6 +43,11 @@ export default function Admin() {
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu.Item onClick={(e) => toggle(e)}>
+              <span style={{ margin: "0em" }}>
+                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              </span>
+            </Menu.Item>
             <Menu.Item
               key="2"
               icon={<UserOutlined />}
@@ -73,18 +78,10 @@ export default function Admin() {
           </Menu>
         </Sider>
         <Layout className="site-layout">
-          <span
-            className="trigger"
-            onClick={(e) => toggle(e)}
-            style={{ margin: "1em" }}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </span>
           <Content
             className="site-layout-background"
             style={{
               margin: "24px 16px",
-              padding: 24,
               minHeight: 280,
             }}
           >
