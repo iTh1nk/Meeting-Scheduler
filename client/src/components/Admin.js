@@ -12,12 +12,9 @@ import { AssignContext } from "../AssignContext";
 import Overview from "./AdminOverview";
 import Settings from "./AdminSettings";
 import Users from "./AdminUsers";
+import Welcome from "./AdminWelcome";
 
 const { Header, Sider, Content } = Layout;
-
-function Welcome() {
-  return <div>Welcome to Admin Page!</div>;
-}
 
 export default function Admin() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
@@ -48,40 +45,28 @@ export default function Admin() {
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item
               key="2"
-              icon={
-                <UserOutlined
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch({ type: "overview" });
-                  }}
-                />
-              }
+              icon={<UserOutlined />}
+              onClick={(e) => {
+                dispatch({ type: "overview" });
+              }}
             >
               Overview
             </Menu.Item>
             <Menu.Item
               key="3"
-              icon={
-                <SettingOutlined
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch({ type: "settings" });
-                  }}
-                />
-              }
+              icon={<SettingOutlined />}
+              onClick={(e) => {
+                dispatch({ type: "settings" });
+              }}
             >
               Settings
             </Menu.Item>
             <Menu.Item
               key="4"
-              icon={
-                <IdcardOutlined
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch({ type: "users" });
-                  }}
-                />
-              }
+              icon={<IdcardOutlined />}
+              onClick={(e) => {
+                dispatch({ type: "users" });
+              }}
             >
               Users
             </Menu.Item>
