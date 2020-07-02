@@ -1,5 +1,6 @@
 import React, { useReducer, useState, useEffect } from "react";
-import { Select, Layout, Form, Input, Button, Skeleton } from "antd";
+import { Select, Layout, Form, Input, Button } from "antd";
+import { DeleteTwoTone } from "@ant-design/icons";
 import Awaiting from "./Awaiting";
 import Axios from "axios";
 
@@ -10,23 +11,19 @@ const styles = {
 };
 
 export default function Users() {
+  const [isClicked, setIsClicked] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [readUser, setReadUser] = useState([]);
   const [content, dispatch] = useReducer(contentReducer, "");
 
   function contentReducer(state, action) {
     switch (action.type) {
-      case "allUsers":
-        return <AllUsers />;
       case "addUser":
         return <AddUser />;
-      case "deleteUser":
-        return <DeleteUser />;
       case "updateUser":
         return <UpdateUser />;
     }
   }
-
   useEffect(() => {
     Axios.get("http://localhost:3001/api/user/read", {
       headers: {
@@ -42,39 +39,30 @@ export default function Users() {
           console.log(err);
         }
       });
-  }, []);
+  }, [isClicked]);
 
-  function AllUsers() {
-    return (
-      <div>
-        {readUser !== undefined
-          ? readUser.map((item, idx) => (
-              <div key={idx}>
-                <h2>{item.username}</h2>
-                <ul>
-                  <li>
-                    Email: <span style={styles.listStyle}>{item.email}</span>
-                  </li>
-                  <li>
-                    Super:{" "}
-                    <span style={styles.listStyle}>
-                      {item.group === 0 ? "No" : "Yes"}
-                    </span>
-                  </li>
-                  <li>
-                    Created At:{" "}
-                    <span style={styles.listStyle}>{item.createdAt}</span>
-                  </li>
-                </ul>
-              </div>
-            ))
-          : "No Data"}
-      </div>
-    );
-  }
+  const handleDelete = (e, id) => {
+    e.preventDefault();
+    Axios.delete("http://localhost:3001/api/user/delete/" + id, {
+      headers: {
+        authorization: localStorage.getItem("auth"),
+      },
+    })
+      .then((resp) => {
+        console.log(resp.data.message);
+        setIsClicked(!isClicked);
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err.response);
+        }
+      });
+  };
+
   function AddUser() {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const [form] = Form.useForm();
 
@@ -83,13 +71,16 @@ export default function Users() {
         username: values.username,
         password: values.password,
         email: values.email,
+        group: values.group,
       };
       setConfirmLoading(true);
       Axios.post("http://localhost:3001/api/signup", data)
         .then((resp) => {
           if (resp.data.message === "ok") {
-            window.localStorage.setItem("auth", "Bearer " + resp.data.token);
             setConfirmLoading(false);
+            setSuccessMessage("User Added!");
+            setIsClicked(!isClicked);
+            onReset();
           } else {
             setConfirmLoading(false);
             setErrorMessage(resp.data.message);
@@ -98,6 +89,7 @@ export default function Users() {
         .catch((err) => {
           if (err) {
             console.log(err);
+            setConfirmLoading(false);
             setErrorMessage(err.response.data.message);
           }
         });
@@ -116,7 +108,19 @@ export default function Users() {
 
     return (
       <div>
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form
+          {...layout}
+          form={form}
+          name="control-hooks"
+          onFinish={onFinish}
+          initialValues={{
+            username: "",
+            email: "",
+            password: "",
+            password2: "",
+            group: 0,
+          }}
+        >
           <Form.Item
             name="username"
             label="Username"
@@ -136,6 +140,7 @@ export default function Users() {
               onChange={(e) => {
                 e.preventDefault();
                 setErrorMessage("");
+                setSuccessMessage("");
               }}
             />
           </Form.Item>
@@ -158,6 +163,7 @@ export default function Users() {
               onChange={(e) => {
                 e.preventDefault();
                 setErrorMessage("");
+                setSuccessMessage("");
               }}
             />
           </Form.Item>
@@ -180,6 +186,7 @@ export default function Users() {
               onChange={(e) => {
                 e.preventDefault();
                 setErrorMessage("");
+                setSuccessMessage("");
               }}
             />
           </Form.Item>
@@ -198,7 +205,7 @@ export default function Users() {
                   if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject("Two passwords don't match!");
+                  return Promise.reject("Passwords don't match!");
                 },
               }),
             ]}
@@ -207,8 +214,12 @@ export default function Users() {
               onChange={(e) => {
                 e.preventDefault();
                 setErrorMessage("");
+                setSuccessMessage("");
               }}
             />
+          </Form.Item>
+          <Form.Item name="group" label="Group" hasFeedback>
+            <Input />
           </Form.Item>
           <Form.Item style={{ textAlign: "center" }}>
             <Button type="primary" htmlType="submit" loading={confirmLoading}>
@@ -222,17 +233,21 @@ export default function Users() {
               Reset
             </Button>
           </Form.Item>
-          {errorMessage ? (
-            <Form.Item>
-              <span className="errorMessage">{errorMessage}</span>
-            </Form.Item>
-          ) : null}
+          <span style={{ textAlign: "center" }}>
+            {errorMessage ? (
+              <Form.Item>
+                <span className="errorMessage">{errorMessage}</span>
+              </Form.Item>
+            ) : null}
+            {successMessage ? (
+              <Form.Item>
+                <span className="successMessage">{successMessage}</span>
+              </Form.Item>
+            ) : null}
+          </span>
         </Form>
       </div>
     );
-  }
-  function DeleteUser() {
-    return <div>delete User</div>;
   }
   function UpdateUser() {
     return <div>Update User</div>;
@@ -254,18 +269,48 @@ export default function Users() {
   return (
     <div>
       <Select
-        defaultValue="Choose an option..."
+        defaultValue="All Users"
         style={{ width: "100%" }}
         onChange={(e) => handleChange(e)}
       >
         <Select.Option value="allUsers">All Users</Select.Option>
         <Select.Option value="addUser">Add User</Select.Option>
-        <Select.Option value="deleteUser">Delete User</Select.Option>
         <Select.Option value="updateUser">Update User</Select.Option>
       </Select>
       <Layout style={{ margin: "1.5em" }}>
         <span style={{ backgroundColor: "#fff" }}>{content}</span>
       </Layout>
+      {readUser !== undefined
+        ? readUser.map((item, idx) => (
+            <div key={idx}>
+              <h2>
+                {item.username}{" "}
+                <a
+                  onClick={(e) => {
+                    handleDelete(e, item._id);
+                  }}
+                >
+                  <DeleteTwoTone />
+                </a>
+              </h2>
+              <ul>
+                <li>
+                  Email: <span style={styles.listStyle}>{item.email}</span>
+                </li>
+                <li>
+                  Super:{" "}
+                  <span style={styles.listStyle}>
+                    {item.group === 0 ? "No" : "Yes"}
+                  </span>
+                </li>
+                <li>
+                  Created At:{" "}
+                  <span style={styles.listStyle}>{item.createdAt}</span>
+                </li>
+              </ul>
+            </div>
+          ))
+        : "No Data"}
     </div>
   );
 }

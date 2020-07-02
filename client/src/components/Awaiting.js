@@ -5,6 +5,7 @@ export default function Awaiting() {
   return (
     <div>
       <Skeleton active />
+      <Skeleton active />
     </div>
   );
 }

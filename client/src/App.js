@@ -80,7 +80,7 @@ function App() {
             <Route component={NoMatch} />
           </Switch>
         </Router>
-        <br />
+        {/* <br /> */}
         <Footer style={{ textAlign: "center" }}>Meeting Scheduler ©2020</Footer>
       </AssignContext.Provider>
     </div>
