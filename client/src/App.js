@@ -70,7 +70,7 @@ function App() {
             <Route
               exact
               path="/admin"
-              render={(props) => (isAuthenticated ? <Admin /> : <Login />)}
+              render={(props) => (isAuthenticated ? <Admin /> : <Admin />)}
             />
             <Route
               exact

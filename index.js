@@ -101,20 +101,21 @@ app.post("/api/signup", (req, res) => {
     });
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-}
-
-app.get("/api/auth", authorizationJWT, (req, res) => {
+app.get("/api/auth", (req, res) => {
   return res.json({ message: "ok" });
 });
 
 app.use("/api/user", authorizationJWT, userRoutes);
 app.use("/api/meeting", authorizationJWT, meetingRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
+
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
+
 
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/meetingscheduler",
