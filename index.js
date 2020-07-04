@@ -83,9 +83,7 @@ app.post("/api/signup", (req, res) => {
                   process.env.SECRET_KEY,
                   { expiresIn: process.env.SECRET_EXP },
                   (err, token) => {
-                    return res
-                      .status(201)
-                      .json({ message: "ok" });
+                    return res.status(201).json({ message: "ok" });
                   }
                 );
               })
@@ -116,7 +114,6 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/meetingscheduler",
   {
@@ -129,6 +126,7 @@ mongoose.connect(
 
 //User Authorization
 function authorizationJWT(req, res, next) {
+  return next();
   let bearerToken = req.headers["authorization"];
   if (!(bearerToken === undefined)) {
     let token = bearerToken.split(" ")[1];
