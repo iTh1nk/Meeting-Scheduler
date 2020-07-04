@@ -16,7 +16,7 @@ const styles = {
 
 export default function Users() {
   const [isClicked, setIsClicked] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [readUser, setReadUser] = useState([]);
   const [content, dispatch] = useReducer(contentReducer, "");
 
