@@ -1,8 +1,12 @@
 import React, { useReducer, useState, useEffect } from "react";
-import { Select, Layout, Form, Input, Button } from "antd";
-import { DeleteTwoTone } from "@ant-design/icons";
+import { Select, Layout, Form, Input, Button, Popconfirm } from "antd";
+import { DeleteTwoTone, EditTwoTone } from "@ant-design/icons";
 import Awaiting from "./Awaiting";
 import Axios from "axios";
+import AdminUserEmail from "./AdminUsersEmail";
+import AdminUserPassword from "./AdminUsersPassword";
+import AdminUserGroup from "./AdminUsersGroup";
+import moment from "moment";
 
 const styles = {
   listStyle: {
@@ -15,6 +19,9 @@ export default function Users() {
   const [isLoading, setIsLoading] = useState(true);
   const [readUser, setReadUser] = useState([]);
   const [content, dispatch] = useReducer(contentReducer, "");
+  const [updateGroup, setUpdateGroup] = useState(false);
+  const [updateEmail, setUpdateEmail] = useState(false);
+  const [updatePassword, setUpdatePassword] = useState(false);
 
   function contentReducer(state, action) {
     switch (action.type) {
@@ -264,12 +271,14 @@ export default function Users() {
       </div>
     );
   }
-
+  const spCb = (bool) => {
+    setIsClicked(bool);
+  };
   //************* MAIN *************
   return (
     <div>
       <Select
-        defaultValue="All Users"
+        defaultValue="allUsers"
         style={{ width: "100%" }}
         onChange={(e) => handleChange(e)}
       >
@@ -285,27 +294,57 @@ export default function Users() {
             <div key={idx}>
               <h2>
                 {item.username}{" "}
-                <a
-                  onClick={(e) => {
-                    handleDelete(e, item._id);
-                  }}
+                <Popconfirm
+                  title="Confirm Delete?"
+                  onConfirm={(e) => handleDelete(e, item._id)}
+                  okText="Yes"
+                  cancelText="No"
                 >
-                  <DeleteTwoTone />
-                </a>
+                  <a>
+                    <DeleteTwoTone />
+                  </a>
+                </Popconfirm>
               </h2>
               <ul>
                 <li>
-                  Email: <span style={styles.listStyle}>{item.email}</span>
+                  <AdminUserEmail
+                    defaultShow={item.email}
+                    id={item._id}
+                    style={styles.listStyle}
+                    email={item.email}
+                    isClicked={isClicked}
+                    cb={spCb}
+                  />
                 </li>
                 <li>
-                  Super:{" "}
-                  <span style={styles.listStyle}>
-                    {item.group === 0 ? "No" : "Yes"}
-                  </span>
+                  <AdminUserPassword
+                    id={item._id}
+                    style={styles.listStyle}
+                    isClicked={isClicked}
+                    cb={spCb}
+                  />
+                </li>
+                <li>
+                  <AdminUserGroup
+                    defaultShow={item.group}
+                    id={item._id}
+                    style={styles.listStyle}
+                    group={item.group}
+                    isClicked={isClicked}
+                    cb={spCb}
+                  />
                 </li>
                 <li>
                   Created At:{" "}
-                  <span style={styles.listStyle}>{item.createdAt}</span>
+                  <span style={styles.listStyle}>
+                    {moment(item.createdAt).format("MM-DD-YYYY HH:MM")}
+                  </span>
+                </li>
+                <li>
+                  Updated At:{" "}
+                  <span style={styles.listStyle}>
+                    {moment(item.updatedAt).format("MM-DD-YYYY HH:MM")}
+                  </span>
                 </li>
               </ul>
             </div>

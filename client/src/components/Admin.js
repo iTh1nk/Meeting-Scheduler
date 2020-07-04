@@ -20,7 +20,7 @@ const { Header, Sider, Content } = Layout;
 export default function Admin() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AssignContext);
   const [collapsed, setCollapsed] = useState(true);
-  const [sideBar, dispatch] = useReducer(SidebarReducer, <Users />);
+  const [sideBar, dispatch] = useReducer(SidebarReducer, <Welcome />);
 
   const toggle = (e) => {
     // e.preventDefault();

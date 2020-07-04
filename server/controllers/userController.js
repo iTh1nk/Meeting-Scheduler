@@ -34,9 +34,9 @@ module.exports = {
         if (err) return res.status(500);
       });
   },
-  updateUser: (req, res) => {
+  updateUserPassword: (req, res) => {
     let id = req.params.id;
-    let data = _.pick(req.body, ["password", "email"]);
+    let data = _.pick(req.body, ["password"]);
     bcrypt.hash(data.password, 10, (err, hash) => {
       if (err) {
         console.log(colors.green(err));
@@ -49,19 +49,60 @@ module.exports = {
           {
             $set: {
               password: hash,
-              email: data.email,
               updatedAt: Date.now(),
             },
           }
         )
           .then((dbUser) => {
-            return res.status(200).json({ message: "User Updated!" });
+            return res.status(200).json({ message: "User Password Updated!" });
           })
           .catch((err) => {
-            if (err) res.status(500);
+            if (err) return res.status(500);
           });
       }
     });
+  },
+  updateUserEmail: (req, res) => {
+    let id = req.params.id;
+    let data = _.pick(req.body, ["email"]);
+    db.User.update(
+      { _id: id },
+      {
+        $set: {
+          email: data.email,
+          updatedAt: Date.now(),
+        },
+      }
+    )
+      .then((dbUser) => {
+        return res.status(200).json({ message: "User Email Updated!" });
+      })
+      .catch((err) => {
+        if (err) {
+          return res.status(500);
+        }
+      });
+  },
+  updateUserGroup: (req, res) => {
+    let id = req.params.id;
+    let data = _.pick(req.body, ["group"]);
+    db.User.update(
+      { _id: id },
+      {
+        $set: {
+          group: data.group,
+          updatedAt: Date.now(),
+        },
+      }
+    )
+      .then((dbUser) => {
+        return res.status(200).json({ message: "User Group Updated!" });
+      })
+      .catch((err) => {
+        if (err) {
+          return res.status(500);
+        }
+      });
   },
   deleteUser: (req, res) => {
     id = req.params.id;

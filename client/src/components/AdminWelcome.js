@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Welcome() {
   return (
-    <div>
+    <div style={{margin: "2em"}}>
       <img
         className="App-logo"
         style={{
