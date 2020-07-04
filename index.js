@@ -112,9 +112,9 @@ app.get("/api/auth", authorizationJWT, (req, res) => {
 app.use("/api/user", authorizationJWT, userRoutes);
 app.use("/api/meeting", authorizationJWT, meetingRoutes);
 
-// app.use((req, res) => {
-//   res.sendFile(path.join(__dirname, "./client/build/index.html"));
-// });
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
 
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/meetingscheduler",

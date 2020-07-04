@@ -18,6 +18,9 @@
     "type": "git",
     "url": "git+https://github.com/iTh1nk/Meeting-Scheduler.git"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
