@@ -21,7 +21,7 @@ const meetingRoutes = require("./server/routes/meetingRoutes");
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: "http://localhost:3009",
+  origin: "http://localhost:3000",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTION",
   // optionsSuccessStatus: 200,
 };
@@ -99,7 +99,7 @@ app.post("/api/signup", (req, res) => {
     });
 });
 
-app.get("/api/auth", (req, res) => {
+app.get("/api/auth", authorizationJWT, (req, res) => {
   return res.json({ message: "ok" });
 });
 
