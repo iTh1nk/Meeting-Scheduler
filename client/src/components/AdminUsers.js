@@ -27,7 +27,7 @@ export default function Users() {
     }
   }
   useEffect(() => {
-    Axios.get("http://localhost:3001/api/user/read", {
+    Axios.get("/user/read", {
       headers: {
         authorization: localStorage.getItem("auth"),
       },
@@ -45,7 +45,7 @@ export default function Users() {
 
   const handleDelete = (e, id) => {
     e.preventDefault();
-    Axios.delete("http://localhost:3001/api/user/delete/" + id, {
+    Axios.delete("/user/delete/" + id, {
       headers: {
         authorization: localStorage.getItem("auth"),
       },
@@ -76,7 +76,7 @@ export default function Users() {
         group: values.group,
       };
       setConfirmLoading(true);
-      Axios.post("http://localhost:3001/api/signup", data)
+      Axios.post("/signup", data)
         .then((resp) => {
           if (resp.data.message === "ok") {
             setConfirmLoading(false);

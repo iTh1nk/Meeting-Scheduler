@@ -25,7 +25,7 @@ export default function Login() {
       password: values.password,
     };
     setConfirmLoading(true);
-    Axios.post("http://localhost:3001/api/login", data)
+    Axios.post("/login", data)
       .then((resp) => {
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);

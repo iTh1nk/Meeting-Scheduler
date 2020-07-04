@@ -28,7 +28,7 @@ function App() {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/api/auth", {
+    Axios.get("/auth", {
       headers: {
         authorization: localStorage.getItem("auth"),
       },

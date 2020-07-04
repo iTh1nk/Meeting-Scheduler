@@ -10,7 +10,7 @@ export default function AdminUserPassword(props) {
     let data = {
       password: values.updatePasswordField,
     };
-    Axios.put("http://localhost:3001/api/user/put/password/" + props.id, data, {
+    Axios.put("/user/put/password/" + props.id, data, {
       headers: {
         Authorization: localStorage.getItem("auth"),
       },

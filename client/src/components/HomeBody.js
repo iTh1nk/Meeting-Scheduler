@@ -5,7 +5,7 @@ export default function HomeBody() {
   const [test, setTest] = useState("");
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/api/test")
+    Axios.get("/test")
       .then((resp) => {
         console.log(resp.data);
         setTest(resp.data.message);
