@@ -19,16 +19,11 @@ export default function Users() {
   const [isLoading, setIsLoading] = useState(true);
   const [readUser, setReadUser] = useState([]);
   const [content, dispatch] = useReducer(contentReducer, "");
-  const [updateGroup, setUpdateGroup] = useState(false);
-  const [updateEmail, setUpdateEmail] = useState(false);
-  const [updatePassword, setUpdatePassword] = useState(false);
 
   function contentReducer(state, action) {
     switch (action.type) {
       case "addUser":
         return <AddUser />;
-      case "updateUser":
-        return <UpdateUser />;
     }
   }
   useEffect(() => {
@@ -284,7 +279,6 @@ export default function Users() {
       >
         <Select.Option value="allUsers">All Users</Select.Option>
         <Select.Option value="addUser">Add User</Select.Option>
-        <Select.Option value="updateUser">Update User</Select.Option>
       </Select>
       <Layout style={{ margin: "1.5em" }}>
         <span style={{ backgroundColor: "#fff" }}>{content}</span>
