@@ -34,6 +34,7 @@ function App() {
       },
     })
       .then((resp) => {
+        console.log(resp)
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);
           setLoginUser(
@@ -44,7 +45,7 @@ function App() {
       })
       .catch((err) => {
         if (err) {
-          console.log(err.response);
+          console.log(err);
           setIsLoading(false);
         }
       });
