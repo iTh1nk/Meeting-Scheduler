@@ -10,7 +10,7 @@ export default function AdminUserGroup(props) {
     let data = {
       group: values.updateGroupField,
     };
-    Axios.put("/user/put/group/" + props.id, data, {
+    Axios.put("/api/user/put/group/" + props.id, data, {
       headers: {
         Authorization: localStorage.getItem("auth"),
       },

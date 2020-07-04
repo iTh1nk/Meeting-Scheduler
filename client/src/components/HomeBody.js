@@ -5,13 +5,13 @@ export default function HomeBody() {
   const [test, setTest] = useState("");
 
   useEffect(() => {
-    Axios.get("/test")
+    Axios.get("/api/test")
       .then((resp) => {
         console.log(resp.data);
         setTest(resp.data.message);
       })
       .catch((err) => {
-        if (err) console.log(err);
+        if (err) console.log("Error Occurred: ", err);
       });
   });
 

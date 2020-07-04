@@ -27,7 +27,7 @@ export default function Signup() {
       email: values.email,
     };
     setConfirmLoading(true);
-    Axios.post("/signup", data)
+    Axios.post("/api/signup", data)
       .then((resp) => {
         if (resp.data.message === "ok") {
           setIsAuthenticated(true);

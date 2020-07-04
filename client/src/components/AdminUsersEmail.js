@@ -10,7 +10,7 @@ export default function AdminUserEmail(props) {
     let data = {
       email: values.updateEmailField,
     };
-    Axios.put("/user/put/email/" + props.id, data, {
+    Axios.put("/api/user/put/email/" + props.id, data, {
       headers: {
         Authorization: localStorage.getItem("auth"),
       },
