@@ -14,7 +14,7 @@ import IsLoading from "./components/IsLoading";
 const { Footer } = Layout;
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginUser, setLoginUser] = useState("");
 
