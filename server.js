@@ -99,10 +99,6 @@ app.post("/api/signup", (req, res) => {
     });
 });
 
-app.get("/api/test", (req, res) => {
-  return res.json({ message: "test" });
-});
-
 app.get("/api/auth", (req, res) => {
   return res.json({ message: "ok" });
 });
@@ -130,15 +126,14 @@ mongoose.connect(
 
 //User Authorization
 function authorizationJWT(req, res, next) {
-  next();
-  // let bearerToken = req.headers["authorization"];
-  // if (!(bearerToken === undefined)) {
-  //   let token = bearerToken.split(" ")[1];
-  //   jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
-  //     if (err) return res.sendStatus(403);
-  //     else next();
-  //   });
-  // } else return res.sendStatus(403);
+  let bearerToken = req.headers["authorization"];
+  if (!(bearerToken === undefined)) {
+    let token = bearerToken.split(" ")[1];
+    jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+      if (err) return res.sendStatus(403);
+      else next();
+    });
+  } else return res.sendStatus(403);
 }
 
 http.listen(PORT, () => {
